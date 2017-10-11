@@ -5,7 +5,7 @@
 #### 1.将需解压的日志放入pack文件夹，可一次性放多个
 #### 2.打开 终端 cd进入logTool目录执行：
 ```Bash  
-python deco
+python decodeLog.py
 ```
 #### 3.解压后的日志文件在unpack文件夹下
 
@@ -13,6 +13,6 @@ python deco
 #### 1.将需解压的日志放入pack文件夹，可一次性放多个
 #### 2.打开 cmd cd进入logTool目录执行：
 ```Bash  
-python deco
+python decodeLog.py
 ```
 #### 3.解压后的日志文件在unpack文件夹下
