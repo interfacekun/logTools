@@ -3,7 +3,7 @@
 ## 使用方法
 ### linux:
 #### 1.将需解压的日志放入pack文件夹，可一次性放多个
-#### 2.打开 终端 cd进入logTool目录执行：
+#### 2.打开 终端 cd进入logTools目录执行：
 ```Bash  
 python decodeLog.py
 ```
@@ -11,7 +11,7 @@ python decodeLog.py
 
 ### windows:
 #### 1.将需解压的日志放入pack文件夹，可一次性放多个
-#### 2.打开 cmd cd进入logTool目录执行：
+#### 2.打开 cmd cd进入logTools目录执行：
 ```Bash  
 python decodeLog.py
 ```
