@@ -10,8 +10,8 @@ python deco
 #### 3.解压后的日志文件在unpack文件夹下
 
 ### windows:
-1.将需解压的日志放入pack文件夹，可一次性放多个
-2.打开 cmd cd进入logTool目录执行：
+#### 1.将需解压的日志放入pack文件夹，可一次性放多个
+#### 2.打开 cmd cd进入logTool目录执行：
 ```Bash  
 python deco
 ```
