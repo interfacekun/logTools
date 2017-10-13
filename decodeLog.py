@@ -12,7 +12,8 @@ import os
 import zlib
 import base64
 import sys
-
+import multiprocessing
+import time
 
 def decompress(infile, dst):
     infile = open(infile, 'rb')
@@ -26,36 +27,47 @@ def decompress(infile, dst):
     infile.close()
     dst.close()
 
-def unpackLogs(packFileDir, unpackFileDir):   
-	for root, dirs, files in os.walk(packFileDir):  
+def unpackStart(packFileDir, unpackFileDir,fileName):
+	startTime = time.time()
+	print("unpack fileName", fileName)
+	packFile = packFileDir + fileName
+	packFileObject = open(packFile, "r")
+	tempFile = packFileDir + "temp.log"
+	try:
+		decompress(packFile, tempFile)
+		tempFileObject = open(tempFile, "r")
+		zlibDecodeLog = tempFileObject.read()
+		unpackFile = unpackFileDir + fileName
+		if os.path.exists(unpackFile):
+			os.remove(unpackFile)
+		unpackFileObject = open(unpackFile, "w+")
+		try:
+			for line in zlibDecodeLog.split("\n")[:-1]:
+				#print(line)
+				rawLog = base64.b64decode(line)
+				if type(rawLog) != type("a") :
+					rawLog = rawLog.decode('utf-8')
+				unpackFileObject.write(rawLog+'\n')
+		finally:
+			tempFileObject.close()
+			unpackFileObject.close()
+		os.remove(tempFile)
+	finally:
+		packFileObject.close()
+	stopTime = time.time()
+	handleTime = stopTime - startTime
+	print("upack %s done! use %ds."%(fileName, handleTime))
+
+def unpackLogs(packFileDir, unpackFileDir):
+	threads = []
+	for root, dirs, files in os.walk(packFileDir):
 		for fileName in files:
-			print("unpack fileName", fileName)
-			packFile = packFileDir + fileName
-			packFileObject = open(packFile, "r")
-			tempFile = packFileDir + "temp.log"
-			try:
-				decompress(packFile, tempFile)
-				tempFileObject = open(tempFile, "r")
-				zlibDecodeLog = tempFileObject.read()
-				unpackFile = unpackFileDir + fileName
-				if os.path.exists(unpackFile):
-					os.remove(unpackFile)
-				unpackFileObject = open(unpackFile, "w+")
-				#print(base64.b64decode(zlibDecodeLog))
-				try:
-					for line in zlibDecodeLog.split("\n")[:-1]:
-						#print(line)
-						rawLog = base64.b64decode(line)
-						if type(rawLog) != type("a") :
-							rawLog = rawLog.decode('utf-8')
-						unpackFileObject.write(rawLog+'\n')
-				finally:
-					tempFileObject.close()
-					unpackFileObject.close()
-				os.remove(tempFile)
-			finally:
-				packFileObject.close()
-				print("unpackLogs error!")
+			if fileName != ".gitignore":
+				thread = multiprocessing.Process(target = unpackStart, args=(packFileDir, unpackFileDir,fileName))
+				threads.append(thread)
+	for t in threads:
+		t.start()
+
 
 if __name__ == "__main__":
 	packFileDir = "./pack/"
@@ -66,8 +78,6 @@ if __name__ == "__main__":
 		if sys.argv[2]!=None:
 			unpackFileDir = sys.argv[2]
 
-	print("sss unpack debugLog file run.")
+	print("unpack debugLog file run.")
 
 	unpackLogs(packFileDir, unpackFileDir)
-
-	print("sss unpack debugLog file done!")
