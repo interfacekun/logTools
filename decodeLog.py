@@ -32,7 +32,7 @@ def unpackStart(packFileDir, unpackFileDir,fileName):
 	print("unpack fileName", fileName)
 	packFile = packFileDir + fileName
 	packFileObject = open(packFile, "r")
-	tempFile = packFileDir + "temp.log"
+	tempFile = packFileDir + fileName + "Temp.log"
 	try:
 		decompress(packFile, tempFile)
 		tempFileObject = open(tempFile, "r")
@@ -51,7 +51,8 @@ def unpackStart(packFileDir, unpackFileDir,fileName):
 		finally:
 			tempFileObject.close()
 			unpackFileObject.close()
-		os.remove(tempFile)
+		if os.path.exists(tempFile):
+			os.remove(tempFile)
 	finally:
 		packFileObject.close()
 	stopTime = time.time()
